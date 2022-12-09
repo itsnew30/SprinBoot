@@ -6,7 +6,10 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -52,6 +55,8 @@ public class ApiController {
 		return returnMap;
 	}
 	
+	// 스프링부트에선
+	// GET: 조회, POST: 등록, PUT: 수정, DELETE: 삭제
 	@GetMapping("/restFulApi")
 	public ResponseEntity<?> restFulApi(int boardNo, HttpServletResponse response) {
 		ResponseDTO<BoardDTO> responseDTO = new ResponseDTO<BoardDTO>();
@@ -71,7 +76,20 @@ public class ApiController {
 		}
 	}
 	
+	@PostMapping("/board")
+	public void insertBoard(BoardDTO boardDTO) {
+		boardService.insertBoard(boardDTO);
+	}
 	
+	@PutMapping("/board") // update는 putmapping사용
+	public void updateBoard(BoardDTO boardDTO) {
+		boardService.updateBoard(boardDTO);
+	}
+	
+	@DeleteMapping("/board")
+	public void deleteBoard(int boardNo) {
+		boardService.deleteBoard(boardNo);
+	}
 	
 	
 	
