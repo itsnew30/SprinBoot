@@ -1,4 +1,4 @@
-package com.exen.springboard;
+package com.ezen.springboard;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

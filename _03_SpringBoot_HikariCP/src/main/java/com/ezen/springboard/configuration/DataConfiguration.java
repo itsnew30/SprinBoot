@@ -1,4 +1,4 @@
-package com.exen.springboard.configuration;
+package com.ezen.springboard.configuration;
 
 import javax.sql.DataSource;
 
