@@ -1,9 +1,11 @@
 package com.ezen.springboard.controller;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,10 +74,10 @@ public class UserController {
 	public ModelAndView loginView() {
 		ModelAndView mv = new ModelAndView();
 		
-		mv.setViewName("user.login.html");
+		mv.setViewName("user/login.html");
 		return mv;
 	}
-		
+	
 	@PostMapping("/idCheck")
 	public ResponseEntity<?> idCheck(UserDTO userDTO){
 		ResponseDTO<Map<String, String>> responseDTO = new ResponseDTO<>();
@@ -123,8 +125,8 @@ public class UserController {
 			} else {
 				//User loginUser = userService.login(user);
 				
-				if(checkedUser.getUserPw().equals(userDTO.getUserPw())) {
-				returnMap.put("msg", "PwFail");
+				if(!checkedUser.getUserPw().equals(userDTO.getUserPw())) {
+				returnMap.put("msg", "pwFail");
 				} else {
 					UserDTO loginUser = UserDTO.builder()
 										 .userId(checkedUser.getUserId())
@@ -141,7 +143,7 @@ public class UserController {
 			}
 			
 			responseDTO.setItem(returnMap);
-			
+			System.out.println(returnMap);
 			return ResponseEntity.ok().body(responseDTO);
 		
 		} catch(Exception e) {
@@ -149,10 +151,18 @@ public class UserController {
 			return ResponseEntity.badRequest().body(responseDTO);
 		}
 		
-		
-		
+
 	}
 	
+	// 로그아웃
+	@RequestMapping("/logout")
+	public void logout(HttpSession session, 
+			HttpServletResponse response) throws IOException {
+		
+		
+		session.invalidate();
+		response.sendRedirect("/");
+	}
 	
 	
 	

@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ezen.springboard.entity.BoardFile;
 import com.ezen.springboard.entity.Board;
+import com.ezen.springboard.entity.BoardFile;
 import com.ezen.springboard.mapper.BoardMapper;
 import com.ezen.springboard.repository.BoardFileRepository;
 import com.ezen.springboard.repository.BoardRepository;
@@ -54,18 +54,49 @@ public class BoardServiceImpl implements BoardService {
 			}
 		}
 	@Override
-	public void insertBoard(Board board) {
+	public void insertBoard(Board board, List<BoardFile> uploadFileList) {
+		System.out.println(uploadFileList.size());
 		// TODO Auto-generated method stub
 		// boardMapper.insertBoard(board);
 		boardRepository.save(board);
+		boardRepository.flush();
+		
+		for(BoardFile boardFile : uploadFileList) {
+			boardFile.setBoard(board);
+			
+			int boardFileNo = boardFileRepository.getMaxFileNo(board.getBoardNo());
+			boardFile.setBoardFileNo(boardFileNo);
+			
+			boardFileRepository.save(boardFile);
+		}
 	}
 
 	@Override
-	public Board updateBoard(Board board) {
+	public Board updateBoard(Board board, List<BoardFile> uFileList) {
 		// TODO Auto-generated method stub
 		//boardMapper.updateBoard(board);
 		boardRepository.save(board);
+		
+		if(uFileList.size() > 0) {
+			for(int i = 0; i < uFileList.size(); i++) {
+				if(uFileList.get(i).getBoardFileStatus().equals("U")) {
+					boardFileRepository.save(uFileList.get(i));
+				} else if(uFileList.get(i).getBoardFileStatus().equals("D")) {
+					boardFileRepository.delete(uFileList.get(i));
+				} else if(uFileList.get(i).getBoardFileStatus().equals("I")) {
+					// 추가한 파일들은 boardNo은 가지고 있지만 boardFileNo가 없는 상태라 boardFileNo를 추가
+					int boardFileNo = boardFileRepository.getMaxFileNo(
+							uFileList.get(i).getBoard().getBoardNo());
+					
+					uFileList.get(i).setBoardFileNo(boardFileNo);
+					
+					boardFileRepository.save(uFileList.get(i));
+				}
+			}
+		}
+		
 		boardRepository.flush();
+		
 		return board;
 	}
 
@@ -75,7 +106,7 @@ public class BoardServiceImpl implements BoardService {
 		//boardMapper.deleteBoard(boardNo);
 		boardRepository.deleteById(boardNo);
 	}
-	
+   /*
    @Override
     public void insertBoardFile(BoardFile boardFile) {
       //boardNo 지정
@@ -89,11 +120,19 @@ public class BoardServiceImpl implements BoardService {
       
       boardFileRepository.save(boardFile);
     }
-
+	*/
 	@Override
 	public void updateBoardCnt(int boardNo) {
 		// TODO Auto-generated method stub
 		boardRepository.updateBoardCnt(boardNo);
+	}
+
+	@Override
+	public List<BoardFile> getBoardFileList(int boardNo) {
+		Board board = Board.builder()
+				.boardNo(boardNo)
+				.build();
+		return boardFileRepository.findByBoard(board);
 	}
    
    

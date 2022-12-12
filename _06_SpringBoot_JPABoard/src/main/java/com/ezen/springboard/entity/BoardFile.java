@@ -10,13 +10,19 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name="T_BOARD_FILE")
 @Data
 // 복합키니까 IdClass
 @IdClass(BoardFileId.class)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class BoardFile {
 	@Id
 	@ManyToOne 
@@ -33,5 +39,7 @@ public class BoardFile {
 	private String boardFileCate;
 	@Transient
 	private String boardFileStatus;
+	@Transient
+	private String newFileNm;
 	
 }

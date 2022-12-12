@@ -45,5 +45,7 @@ public interface BoardRepository extends JpaRepository<Board, Integer>{
 	@Modifying // 데이터의 변경이 일어나는 @Query
 	@Query(value="UPDATE T_BOARD SET BOARD_CNT = BOARD_CNT + 1 WHERE BOARD_NO = :boardNo", nativeQuery=true)
 	void updateBoardCnt(@Param("boardNo")int boardNo);
+	
+	
 
 }

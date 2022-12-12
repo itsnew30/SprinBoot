@@ -2,21 +2,22 @@ package com.ezen.springboard.service.board;
 
 import java.util.List;
 
-import com.ezen.springboard.entity.BoardFile;
 import com.ezen.springboard.entity.Board;
+import com.ezen.springboard.entity.BoardFile;
 
 public interface BoardService {
 	Board getBoard(int boardNo);
 	
 	List<Board> getBoardList(Board board);
 	
-	void insertBoard(Board board);
+	void insertBoard(Board board, List<BoardFile> uploadFileList);
 	
-	Board updateBoard(Board board);
+	Board updateBoard(Board board, List<BoardFile> uFileList);
 	
 	void deleteBoard(int boardNo);
 	
-	void insertBoardFile(BoardFile boardFile);
-	
+
 	void updateBoardCnt(int boardNo);
+	
+	List<BoardFile> getBoardFileList(int boardNo);
 }
