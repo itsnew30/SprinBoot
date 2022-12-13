@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	
+	<!-- head 영역 시작 -->
+	<!-- layout으로 잡히는 모든 html의 head 영역을 config.html로 대체 -->
+	<head th:replace="/fragments/config :: config">
+	
+	
+	</head>
+	<!-- head 영역 끝 -->
+	<body>
+		<header th:replace="/fragments/header :: header"></header>
+		
+		<div layout:fragment="content"></div><!--이걸(선언문)로 무조건 감싸줘야 내용이 출력된다. div로 만들어줘야함-->
+		
+		<footer th:replace="/fragments/footer :: footer"></footer>
+		
+	</body>	
+
+</html>

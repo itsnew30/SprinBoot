@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><!--xml 선언문-->
+<!DOCTYPE configuration
+	PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
+	"https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+	<!--alias 추가 -->
+	<typeAliases>
+		<typeAlias type="com.ezen.springboard.dto.BoardDTO" alias="board" />
+	</typeAliases>
+</configuration>

@@ -1,0 +1,15 @@
+package com.ezen.springboard.configuration;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
+
+@Configuration
+public class WebMvcConfiguartion {
+	@Bean 
+	public HiddenHttpMethodFilter httpMethodFilter() {
+		HiddenHttpMethodFilter hiddenHttpMethodFilter = new HiddenHttpMethodFilter();
+		
+		return hiddenHttpMethodFilter;
+	}
+}

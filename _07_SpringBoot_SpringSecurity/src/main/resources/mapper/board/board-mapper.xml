@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org/dtd/DTD Mapper 3.0//EN" 
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ezen.springboard.mapper.BoardMapper"><!--namespace 설정은 패키지 위치까지 다 지정을 해줘야한다. -->
+	<!--<select id="getBoard" parameterType="int" resultType="board">
+		SELECT * 
+			FROM T_BOARD
+			WHERE BOARD_NO = #{boardNo}
+	</select>-->
+	
+	<!--엘리먼트마다 어노테이션 생김 select, update, delete, insert 모두 어노테이션으로 대체 가능 -->
+</mapper>
