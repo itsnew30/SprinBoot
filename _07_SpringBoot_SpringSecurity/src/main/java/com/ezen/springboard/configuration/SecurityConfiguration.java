@@ -1,5 +1,7 @@
 package com.ezen.springboard.configuration;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,10 +10,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.ezen.springboard.handler.LoginFailureHandler;
+import com.ezen.springboard.oauth.Oauth2UserService;
+
 @Configuration
 //security의 filterchain을 구현하기 위한 어노테이션 - 필수적으로 작성해줘야함 
 @EnableWebSecurity
 public class SecurityConfiguration {
+	@Autowired
+	private LoginFailureHandler loginFailureHandler;
+	
+	@Autowired
+	private Oauth2UserService oauth2UserService;
 	// 비밀번호 암호화를 위한 PasswordEncoder // 어디서든 사용할 수 있게 static으로 설정 
 	// security에 의해 로그인 처리될 때 비밀번호 비교시 무조건 사용
 	// 복호화는 불가능, match(사용자입력(그냥 String), DB에 저장된 암호화된 비밀번호) => true나 false로 리턴 
@@ -28,7 +38,7 @@ public class SecurityConfiguration {
 		
 		// 홈컨트롤러에 mainpage()메소드 생성 후 권한에 따른 요청 주소 매핑
 												//"/home"으로 시작하는 요청리소스는 모든 사람에게 허용 
-		http.authorizeHttpRequests().antMatchers("/").permitAll()
+		http.authorizeRequests().antMatchers("/").permitAll()
 									.antMatchers("/home/**").permitAll()
 									//css, js, iamges, upload 같은 정적 리소스들도 권한 처리 필수 
 									.antMatchers("/css/**").permitAll()
@@ -41,14 +51,14 @@ public class SecurityConfiguration {
 									.antMatchers("/user/loginProc").permitAll()
 									//권한을 가지고 있는 유저들만 접는근할 수 있는 요청리소스 설정
 									//Authentication객체를 만든 다음에 가져올 수 있는 권한들
-									//.antMatchers("/board/**").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
-									//.antMatcher("/adim/**").access("hasRole('ROLE_ADMIN')")
+									.antMatchers("/board/**").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+									.antMatchers("/adim/**").access("hasRole('ROLE_ADMIN')")
 									//위에 설정하는 요청 주소 제외한 나머지 요청 리소스는 인증된 사용자만 접근가능. 
 									.anyRequest().authenticated();
 		
 		//로그인, 로그아웃 설정 
 		//AuthenticationProvider에게 사용자가 입력한 정보로 만든 
-		//인증용 객체 UsernamePassowordAuthenticationToken을 전탈한 상태까지 설정(4번까지 설정 완료 day05)
+		//인증용 객체 UsernamePassowordAuthenticationToken을 전달 상태까지 설정(4번까지 설정 완료 day05)
 		http.formLogin()
 		    .loginPage("/user/login")
 		    //Spring Security에서는 id는 username,
@@ -59,10 +69,21 @@ public class SecurityConfiguration {
 			//로그인 요청이 오면 security에서 낚아채서 처리해준다.
 			//낚아챌 로그인 요청 url 지정 
 			.loginProcessingUrl("/user/loginProc")
-			// loginProcessingUrl메소드사용하려면 ajax를 form으로 수정해야함 login.html으로 이동
+			//loginProcessingUrl메소드사용하려면 ajax를 form으로 수정해야함 login.html으로 이동
 			//로그인 성공 후 띄워줄 화면 url
-		    .defaultSuccessUrl("/home/main");
+		    .defaultSuccessUrl("/home/main")
+			.failureHandler(loginFailureHandler)
+			//OAuth기반 로그인 처리
+			.and()
+			.oauth2Login()
+			.loginPage("/user/login")
+			//토큰 발행 후 처리
+			//토큰이 발행되면 사용자 정보를 받아서 처리 가능해지는 데, 사용자 정보를 웹 사이트에 맞도록 변경해주는 작업 필요
+			.userInfoEndpoint() // 사용자 정보를 다 가지고 왔을 때
+			//사용자 정보를 웹 사이트에 맞도록 변경해주는 service클래스 등록
+			.userService(oauth2UserService);
 		http.logout()
+			.logoutUrl("/user/logout")
 			.invalidateHttpSession(true)
 			.logoutSuccessUrl("/user/login");
 		

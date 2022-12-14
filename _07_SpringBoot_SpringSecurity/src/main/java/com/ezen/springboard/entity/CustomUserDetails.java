@@ -3,9 +3,12 @@ package com.ezen.springboard.entity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,8 +18,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CustomUserDetails implements UserDetails {
+public class CustomUserDetails implements UserDetails, OAuth2User {
 	private User user;
+	
+	// 소셜로그인에서 사용자 정보를 담아줄 맵 
+	Map<String, Object> attributes;
+	
+	
 	// 권한 정보 제공하는 메소드 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities(){
@@ -68,5 +76,16 @@ public class CustomUserDetails implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+	
+	@Override
+	public Map<String, Object> getAttributes(){
+		return attributes;
+	}
+	
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

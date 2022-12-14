@@ -59,7 +59,6 @@ public class UserController {
 			
 			userService.join(user);
 			
-			
 			returnMap.put("joinMsg", "joinSuccess");
 		 
 			responseDTO.setItem(returnMap);
@@ -75,8 +74,7 @@ public class UserController {
 		}
 
 	}
-	
-	
+		
 	// 로그인 화면으로 이동 
 	@GetMapping("/login")
 	public ModelAndView loginView() {
@@ -112,7 +110,6 @@ public class UserController {
 			
 		}
 	}
-	
 	
 	@PostMapping("/login")
 	   public ResponseEntity<?> login(UserDTO userDTO, HttpSession session) {
@@ -159,12 +156,19 @@ public class UserController {
 	      }
 	      
 	   }
-   
+   /*
 	@RequestMapping("/logout")
 	public void logout(HttpSession session, HttpServletResponse response) throws IOException {
 		// void 로그아웃하면 주소창도 바뀜
 		// modelAndView 사용하면 주소창에 /user/logout 남음  
 			session.invalidate();
 			response.sendRedirect("/");	// http://localhost:9090/ => 이렇게 주소창이 됨	
-	}
+	} */
+	
+	
+	
+	
+	
+	
+	
 }
